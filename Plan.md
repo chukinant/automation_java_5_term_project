@@ -1,6 +1,6 @@
 # План тестирования функционала покупки тура
 
-### [Ссылка на описание задачи]()
+### [Ссылка на описание задачи](https://github.com/netology-code/aqa-qamid-diplom)
 
 ## Цели тестирования:
  - покрыть автотестами функционал приложения aqa-shop, автоматизировать позитивные и негативные сценарии покупки тура;
@@ -9,7 +9,7 @@
 
 ## Тестовые сценарии
 
-Тестовые сценарии описаны в формате BDD, [ссылка]()
+Тестовые сценарии описаны в формате BDD, [ссылка](https://github.com/chukinant/automation_java_5_term_project/blob/main/src/test/resources/features/TripPurchaseCredit.feature)
 
 ## Используемые инструменты
  - Google Chrome - самый популярный на данный момент браузер;
@@ -38,5 +38,5 @@
 6. Доработка по замечаниям эксперта - 4 ч
 
 ## План сдачи работ 
-График выполнения, [ссылка](https://docs.google.com/spreadsheets/d/1ehDEVDlgLoIK3IiIOF5lsvjMAvjGFBroLf6PhLkv3kk/edit?usp=sharing)
+График выполнения, [ссылка](https://docs.google.com/spreadsheets/d/1ehDEVDlgLoIK3IiIOF5lsvjMAvjGFBroLf6PhLkv3kk/edit?usp=sharing)  
 Код автотестов в первой редакции вместе с результатами тестрана и отчётом по автоматизации будут представлены **06.03.25**
