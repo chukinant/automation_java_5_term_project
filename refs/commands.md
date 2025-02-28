@@ -5,3 +5,6 @@ up: Create and start the services defined in the docker-compose.yml file.
 -d or --detach: Run containers in detached (background) mode.  
 --force-recreate: Force containers to be recreated even if there are no changes.  
 --build: Force the images to be rebuilt before starting the containers.  
+
+## git commit --amend --no-edit
+## git push --force (not in main)

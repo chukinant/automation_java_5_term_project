@@ -6,7 +6,6 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
-      POSTGRES_RANDOM_ROOT_PASSWORD: 'yes'
       POSTGRES_DB: shop_db
       POSTGRES_USER: tester
       POSTGRES_PASSWORD: '!Q2w3e4r'
