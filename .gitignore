@@ -22,7 +22,7 @@ settings.gradle
 *.iws
 *.iml
 *.ipr
-src/test/java/data/
+data/
 out/
 
 ### NetBeans ###

@@ -6,8 +6,7 @@ up: Create and start the services defined in the docker-compose.yml file.
 --force-recreate: Force containers to be recreated even if there are no changes.  
 --build: Force the images to be rebuilt before starting the containers.  
 
+## java -jar ./artifacts/aqa-shop.jar
+
 ## git commit --amend --no-edit
 ## git push --force (not in main)
-
-To remove gradle/ and files from Git tracking but keep it locally, run the following commands:
-## git rm --cached gradle/ gradlew gradlew.bat settings.gradle (no need to run `git add -A` afterward)
