@@ -1,6 +1,7 @@
 package ru.netology.term.data;
 
 import com.github.javafaker.Faker;
+import lombok.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,12 +13,18 @@ public class DataHelper {
     private DataHelper() {
     }
 
-    public static String getApprovedCardNumber() {
-        return "1111222233334444";
+    @Value
+    public static class CardInfo {
+        String status;
+        String number;
     }
 
-    public static String getDeclinedCardNumber() {
-        return "5555666677778888";
+    public static CardInfo getApprovedCardInfo() {
+        return new CardInfo("APPROVED", "1111222233334444");
+    }
+
+    public static CardInfo getDeclinedCardInfo() {
+        return new CardInfo("DECLINED", "5555666677778888");
     }
 
     public static String generateRandomCardNumber(String locale, int length) {
@@ -31,9 +38,14 @@ public class DataHelper {
         return faker.regexify("[A-Za-z0-9]{" + length + "}");
     }
 
-    public static String generateRandomSequenceWithSpecialChars(String locale, int length) {
+    public static String generateRandomSequenceWithSpChars(String locale, int length) {
         Faker faker = new Faker(new Locale(locale));
-        return faker.regexify("[0-9!@#$%^&*()_+=<>?]{" + length + "}");
+        return faker.regexify("[0-9!@#$%^&*()_+=<>?'\"-/|]{" + length + "}");
+    }
+
+    public static String generateRandomSequenceWithSpCharsForName(String locale, int length) {
+        Faker faker = new Faker(new Locale(locale));
+        return faker.regexify("[0-9!@#$%^&*()_+=<>?\"/|]{" + length + "}");
     }
 
     public static int generateMonthsToAdd(int min, int max) {
@@ -43,6 +55,14 @@ public class DataHelper {
 
     public static String generateDate(int monthsToAdd) {
         return LocalDate.now().plusMonths(monthsToAdd).format(DateTimeFormatter.ofPattern("MM.yyyy"));
+    }
+
+    public static String getMonth(String date) {
+        return date.substring(0, 2);
+    }
+
+    public static String getYear(String date) {
+        return date.substring(5);
     }
 
     public static String generateName(String locale) {
