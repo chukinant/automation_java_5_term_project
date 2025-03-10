@@ -9,4 +9,4 @@ up: Create and start the services defined in the docker-compose.yml file.
 ## java -jar ./artifacts/aqa-shop.jar
 
 ## git commit --amend --no-edit
-## git push --force (not in main)
+## git push --force (not in main branch)
