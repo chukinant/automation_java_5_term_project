@@ -2,12 +2,13 @@ package ru.netology.term.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import ru.netology.term.data.DataHelper;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class BuyOnCreditPage {
-    private final SelenideElement cardInfoFormHeader = $x("//*[contains(text(),'Кредит по данным карты']");
+    private final SelenideElement cardInfoFormHeader = $x("//*[contains(text(),'Кредит по данным карты')]");
     private final SelenideElement cardNumber = $x("//*[contains(text(),'Номер карты')]//following-sibling::*//input");
     private final SelenideElement cardMonth = $x("//*[contains(text(),'Месяц')]//following-sibling::*//input");
     private final SelenideElement cardYear = $x("//*[contains(text(),'Год')]//following-sibling::*//input");
@@ -25,12 +26,16 @@ public class BuyOnCreditPage {
         cardInfoFormHeader.shouldBe(Condition.visible);
     }
 
-    public void fillForm(String number, String month, String year, String holder, String cvc) {
-        cardNumber.setValue(number);
-        cardMonth.setValue(month);
-        cardYear.setValue(year);
-        cardHolder.setValue(holder);
-        cardCVC.setValue(cvc);
+    public void headerShouldHaveText() {
+        cardInfoFormHeader.shouldHave(Condition.text("Кредит по данным карты"));
+    }
+
+    public void fillForm(DataHelper.CardInfo cardInfo) {
+        cardNumber.setValue(cardInfo.getNumber());
+        cardMonth.setValue(cardInfo.getMonth());
+        cardYear.setValue(cardInfo.getYear());
+        cardHolder.setValue(cardInfo.getHolder());
+        cardCVC.setValue(cardInfo.getCvc());
     }
 
     public void submit() {

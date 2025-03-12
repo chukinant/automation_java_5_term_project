@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class LandingPage {
     private final SelenideElement purchaseOnCreditButton = $x("//*[contains(text(),'Купить в кредит')]/ancestor-or-self::button");
     private final SelenideElement purchaseButton = $x("//*[contains(text(),'Купить')]/ancestor-or-self::button");
-    private final SelenideElement tripOfTheDayHeader = $x("//*[contains(text(),'Путешествие дня']");
+    private final SelenideElement tripOfTheDayHeader = $x("//*[contains(text(),'Путешествие дня')]");
 
     public LandingPage() {
         tripOfTheDayHeader.shouldBe(Condition.visible);
@@ -16,7 +16,7 @@ public class LandingPage {
         purchaseOnCreditButton.shouldBe(Condition.visible);
     }
 
-    public BuyOnCreditPage choosingCredit() {
+    public BuyOnCreditPage chooseCredit() {
         purchaseOnCreditButton.click();
         return new BuyOnCreditPage();
     }
