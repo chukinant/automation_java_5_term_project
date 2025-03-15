@@ -299,8 +299,8 @@ public class Steps {
         buyOnCreditPage.fillForm(cardInfo);
     }
 
-    @When("пользователь заполняет форму, применяя нелатинские буквы {String} в поле")
-    public void fillFormCardHolderNameWithNonLatin(String locale) {
+    @When("пользователь заполняет форму, применяя нелатинские буквы <locale> в поле \"Владелец\"")
+    public void fillFormWithNonLatinLettersInField(String locale) {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName(locale, 10, 15);
         buyOnCreditPage.fillForm(cardInfo);
     }
@@ -316,5 +316,4 @@ public class Steps {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidCVC(x);
         buyOnCreditPage.fillForm(cardInfo);
     }
-
 }

@@ -43,7 +43,7 @@ public class DataHelper {
         String sequence;
         do {
             sequence = faker.regexify("[0-9 !@#$%^&*()_+=<>?'\"-/|]{" + length + "}");
-        } while (!sequence.matches(".*[a-zA-Z].*"));  // Check if the sequence contains at least one letter
+        } while (!sequence.matches(".*[0-9 !@#$%^&*()_+=<>?'\"-/|].*"));  // Check if the sequence contains at least one letter
         return sequence;
     }
 
