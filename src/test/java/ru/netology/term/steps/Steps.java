@@ -113,7 +113,7 @@ public class Steps {
         buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardHolder");
     }
 
-    @When("пользователь заполняет форму, оставив поле \"CVC/CVV\" пустым")
+    @When("пользователь заполняет форму, оставив поле \"CVC\" пустым")
     public void fillFormWithoutCVC() {
         DataHelper.CardInfo cardInfo = DataHelper.getApprovedCardInfo();
         buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardCVC");
@@ -172,13 +172,13 @@ public class Steps {
         buyOnCreditPage.fillForm(cardInfo);
     }
 
-    @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" комбинацию из цифр и спецсимволов")
+    @When("пользователь заполняет форму, указав в поле \"CVC\" комбинацию из цифр и спецсимволов")
     public void fillCvcWithSpChars() {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithSpChars(2);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
-    @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" комбинацию из цифр и букв")
+    @When("пользователь заполняет форму, указав в поле \"CVC\" комбинацию из цифр и букв")
     public void fillCardCvcWithLetters() {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithLetters("en",2);
         buyOnCreditPage.fillForm(cardInfo);
@@ -194,7 +194,7 @@ public class Steps {
         Assertions.assertTrue(cardInfo.getYear().length() < 2);
     }
 
-    @Then("значение не введено в поле \"CVC/CVV\"")
+    @Then("значение не введено в поле \"CVC\"")
     public void cvcIsNotEntered(DataHelper.CardInfo cardInfo) {
         Assertions.assertTrue(cardInfo.getCvc().length() < 3);
     }
@@ -211,7 +211,7 @@ public class Steps {
 
     @Then("появляется сообщение о неверном формате данных владельца")
     public void invalidFormatHolderDisplayed () {
-        buyOnCreditPage.findMsgInvalidCardHolder();
+        buyOnCreditPage.findMsgInvalidFormatCardHolder();
     }
 
     @Then("появляется сообщение о неверном формате данных кода")
@@ -279,6 +279,41 @@ public class Steps {
     @When("пользователь заполняет форму, указав в поле \"Владелец\" только имя")
     public void fillFormOnlyFirstName() {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en", 10, 0);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Владелец\" комбинацию из букв с невалидным спецсимволом")
+    public void fillFormCardHolderNameWithSpChars() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidNameWithSpChars("en", 10, 15);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение неверном формате данных владельца")
+    public void cardInvalidCardHolderDisplayed () {
+        buyOnCreditPage.findMsgInvalidFormatCardHolder();
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Владелец\" комбинацию из букв с цифрами")
+    public void fillFormCardHolderNameWithNumbers() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidNameWithDigits(10);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, применяя нелатинские буквы {String} в поле")
+    public void fillFormCardHolderNameWithNonLatin(String locale) {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName(locale, 10, 15);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав три одинаковых цифры в поле \"CVC\"")
+    public void fillFormCvcOfSameThreeDigits() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCvcOfThreeSameDigits();
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"CVC\" {int} цифр")
+    public void fillFormCvcOfLessThanThreeDigits(int x) {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidCVC(x);
         buyOnCreditPage.fillForm(cardInfo);
     }
 

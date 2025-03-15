@@ -203,6 +203,12 @@ public class DataHelper {
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, name, cardInfo.cvc);
     }
 
+    public static CardInfo getCardInfoInvalidNameWithDigits(int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String name = generateRandomSequenceWithDigitsForName("en", length);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, name, cardInfo.cvc);
+    }
+
     public static CardInfo getCardInfoCvcOfThreeSameDigits() {
         CardInfo cardInfo = getApprovedCardInfo();
         String cvc = generateCvcOfThreeSameDigits();

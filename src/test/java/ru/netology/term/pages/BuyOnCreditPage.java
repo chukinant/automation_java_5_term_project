@@ -111,7 +111,7 @@ public class BuyOnCreditPage {
                 shouldHave(Condition.text("Неверно указан срок действия карты"));
     }
 
-    public void findMsgInvalidCardHolder() {
+    public void findMsgInvalidFormatCardHolder() {
         msgInvalidCardHolder.shouldBe(Condition.visible).
                 shouldHave(Condition.text("Неверный формат"));
     }
