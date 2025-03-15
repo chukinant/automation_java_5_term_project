@@ -1,4 +1,4 @@
-## docker-compose -f docker-compose-postgres.yml -p term_project_postgres up -d --force-recreate --build
+## docker-compose -f docker-compose.yml -p term_project up -d --force-recreate --build
 -f or --file: Specify a custom Docker Compose YAML file.  
 -p or --project-name: Define a custom project name.  
 up: Create and start the services defined in the docker-compose.yml file.  

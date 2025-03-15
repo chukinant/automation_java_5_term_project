@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 import ru.netology.term.data.DataHelper;
 import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
@@ -24,9 +25,10 @@ public class Steps {
         buyOnCreditPage = landingPage.chooseCredit();
     }
 
-    @Then("отображается заголовок \"Кредит по данным карты\"")
+    @Then("отображается заголовок \"Кредит по данным карты\" и форма ввода данных карты")
     public void buyOnCreditHeaderIsVisible() {
         buyOnCreditPage.headerShouldHaveText();
+
     }
 
     @When("пользователь указывает валидные значения в полях: \"Номер карты\", \"Месяц\", \"Год\", \"Владелец\", \"CVC\"")
@@ -45,41 +47,239 @@ public class Steps {
         buyOnCreditPage.findMsgTransactionApproved();
     }
 
-//    @When("пользователь пытается авторизоваться с именем {string} и паролем {string}")
-//    public void login(String login, String password) {
-//        verificationPage = loginPage.validLogin(login, password);
-//    }
-//
-//    @And("пользователь вводит проверочный код 'из смс' {string}")
-//    public void setValidCode(String verificationCode) {
-//        accountPage = verificationPage.validVerification(verificationCode);
-//    }
-//
-//    @Then("происходит успешная авторизация и пользователь попадает на страницу 'Личный кабинет'")
-//    public void verifyAccountPage() {
-//        accountPage.verifyIsAccountPage();
-//    }
-//
-//    @Then("появляется ошибка о неверном коде проверки")
-//    public void verifyCodeIsInvalid() {
-//        verificationPage.verifyCodeIsInvalid();
-//    }
-//
-//    @Given("пользователь залогинен с именем {string} и паролем {string}")
-//    public void userIsLoggedIn(String username, String password) {
-//        openLoginPage("http://localhost:9999");
-//        verificationPage = loginPage.validLogin(username,password);
-//        accountPage = verificationPage.validVerification("12345");
-//    }
-//
-//    @When("пользователь переводит {int} рублей с карты с номером {string} на свою {int} карту с главной страницы")
-//    public void moneyTransfer(int amount, String cardNumber, int cardToIndex) {
-//        addToCardPage = accountPage.initiateTransferToCard(cardToIndex - 1);
-//        addToCardPage.moneyTransfer(cardNumber, amount);
-//    }
-//
-//    @Then("баланс его {int} карты из списка на главной странице должен стать {int} рублей")
-//    public void moneyAreTransferred(int cardToIndex, int balance) {
-//        accountPage.checkCardBalance(cardToIndex - 1, balance);
-//    }
+    @When("пользователь не указывает ничего в полях карты")
+    public void doNothing() {
+    }
+
+    @Then("появляется сообщение об обязательности поля для заполнения")
+    public void fieldIsRequiredDisplayed() {
+        buyOnCreditPage.findMsgFieldIsRequired();
+    }
+
+    @Then("появляется сообщение о неверном формате номера карты")
+    public void wrongFormatDisplayed() {
+        buyOnCreditPage.findMsgInvalidFormatCardNumber();
+    }
+
+    @When("пользователь заполняет форму, указав номер DECLINED карты")
+    public void fillFormWithDeclinedCardInfo() {
+        DataHelper.CardInfo cardInfo = DataHelper.getDeclinedCardInfo();
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение об отклонении операции банком")
+    public void transactionDeclinedDisplayed() {
+        buyOnCreditPage.findMsgTransactionDeclined();
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Номер карты\" {int} цифр")
+    public void fillFormNotCompleteCardNumber(int x) {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidCardNumber(x);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Номер карты\" комбинацию из цифр и спецсимволов")
+    public void fillCardNumberWithSpChars() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardNumberWithSpChars(16);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Номер карты\" комбинацию из цифр и букв")
+    public void fillCardNumberWithSpLetters() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardNumberWithLetters("en", 16);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("значение не введено в поле \"Номер карты\"")
+    public void cardNumberIsNotEntered(DataHelper.CardInfo cardInfo) {
+        Assertions.assertTrue(cardInfo.getNumber().length() < 16);
+    }
+
+    @When("пользователь заполняет форму, оставив поле \"Месяц\" пустым")
+    public void fillFormWithoutMonth() {
+        DataHelper.CardInfo cardInfo = DataHelper.getApprovedCardInfo();
+        buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardMonth");
+    }
+
+    @When("пользователь заполняет форму, оставив поле \"Год\" пустым")
+    public void fillFormWithoutYear() {
+        DataHelper.CardInfo cardInfo = DataHelper.getApprovedCardInfo();
+        buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardYear");
+    }
+
+    @When("пользователь заполняет форму, оставив поле \"Владелец\" пустым")
+    public void fillFormWithoutHolder() {
+        DataHelper.CardInfo cardInfo = DataHelper.getApprovedCardInfo();
+        buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardHolder");
+    }
+
+    @When("пользователь заполняет форму, оставив поле \"CVC/CVV\" пустым")
+    public void fillFormWithoutCVC() {
+        DataHelper.CardInfo cardInfo = DataHelper.getApprovedCardInfo();
+        buyOnCreditPage.fillFormWithOneFieldEmpty(cardInfo, "cardCVC");
+    }
+
+    @When("пользователь заполняет форму, указав \"00\" поле \"Месяц\"")
+    public void fillFormZeroMonth() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("00");;
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав \"13\" поле \"Месяц\"")
+    public void fillFormThirteenthMonth() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("13");;
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+    @When("пользователь заполняет форму, указав одну цифру в поле \"Месяц\"")
+    public void fillFormOneDigitMonth() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidMonth(1);;
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Месяц\" комбинацию из цифры и спецсимвола")
+    public void fillMonthWithSpChars() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardMonthWithSpChars(2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Месяц\" комбинацию из цифры и буквы")
+    public void fillCardMonthWithLetters() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardMonthWithLetters("en",2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав одну цифру в поле \"Год\"")
+    public void fillFormOneDigitYear() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(1);;
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Год\" комбинацию из цифры и спецсимвола")
+    public void fillYearWithSpChars() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithSpChars(2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Год\" комбинацию из цифры и буквы")
+    public void fillCardYearWithLetters() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithLetters("en",2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" <x> цифр")
+    public void fillFormOneOrTwoDigitCvc(int x) {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(x);;
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" комбинацию из цифр и спецсимволов")
+    public void fillCvcWithSpChars() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithSpChars(2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" комбинацию из цифр и букв")
+    public void fillCardCvcWithLetters() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithLetters("en",2);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("значение не введено в поле \"Месяц\"")
+    public void monthIsNotEntered(DataHelper.CardInfo cardInfo) {
+        Assertions.assertTrue(cardInfo.getMonth().length() < 2);
+    }
+
+    @Then("значение не введено в поле \"Год\"")
+    public void yearIsNotEntered(DataHelper.CardInfo cardInfo) {
+        Assertions.assertTrue(cardInfo.getYear().length() < 2);
+    }
+
+    @Then("значение не введено в поле \"CVC/CVV\"")
+    public void cvcIsNotEntered(DataHelper.CardInfo cardInfo) {
+        Assertions.assertTrue(cardInfo.getCvc().length() < 3);
+    }
+
+    @Then("появляется сообщение о неверном формате данных месяца")
+    public void invalidFormatMonthDisplayed () {
+        buyOnCreditPage.findMsgInvalidFormatMonth();
+    }
+
+    @Then("появляется сообщение о неверном формате данных года")
+    public void invalidFormatYearDisplayed () {
+        buyOnCreditPage.findMsgInvalidFormatYear();
+    }
+
+    @Then("появляется сообщение о неверном формате данных владельца")
+    public void invalidFormatHolderDisplayed () {
+        buyOnCreditPage.findMsgInvalidCardHolder();
+    }
+
+    @Then("появляется сообщение о неверном формате данных кода")
+    public void invalidFormatCvcDisplayed () {
+        buyOnCreditPage.findMsgInvalidFormatCVC();
+    }
+
+    @When("пользователь заполняет форму, указав текущие месяц и год в соответствующих полях")
+    public void fillFormCurrentMonthAndYear() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(0,0);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав прошлый месяц в поле \"Месяц\" и текущий год в поле \"Год\"")
+    public void fillFormLastMonth() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(-1,-1);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение о неверном сроке действия карты")
+    public void invalidExpirationDateDisplayed () {
+        buyOnCreditPage.findMsgCardExpirationInvalidDateMonth();
+    }
+
+    @When("пользователь заполняет форму, указав полях \"Месяц\" и \"Год\" прошлый период")
+    public void fillFormPastDate() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(-1,-300);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение о неверном сроке действия карты или истекшем сроке действия карты")
+    public void cardExpiredDisplayed () {
+        buyOnCreditPage.findMsgCardExpiredDateYear();;
+    }
+
+    @When("пользователь заполняет форму, указав следующий месяц в поле \"Месяц\" и текущий год + 6 в поле \"Год\"")
+    public void fillFormSeventyThreeMonthDate() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(73,73);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение о неверно указанном сроке действия карты")
+    public void cardInvalidExpirationDateDisplayed () {
+        buyOnCreditPage.findMsgCardExpirationInvalidDateYear();
+    }
+
+    @When("пользователь заполняет форму, указав текущий месяц в поле \"Месяц\" и текущий год + 6 в поле \"Год\"")
+    public void fillFormSeventyTwoMonthDate() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(72,72);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав полях \"Месяц\" и \"Год\" период, отстоящий более чем на 6 лет от текущего")
+    public void fillFormMoreThanSeventyThreeMonthsDate() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(73,300);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Владелец\" имя и фамилию, состоящие из 1 буквы")
+    public void fillFormOneLetterCardHolderName() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en", 1, 0);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @When("пользователь заполняет форму, указав в поле \"Владелец\" только имя")
+    public void fillFormOnlyFirstName() {
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en", 10, 0);
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
 }

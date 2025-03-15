@@ -23,7 +23,7 @@ public class DataHelper {
         String cvc;
     }
 
-    public static String generateRandomCardNumber(int length) {
+    public static String generateRandomCardNumberMonthYearOrCvc(int length) {
         Faker faker = new Faker();
         String pattern = "#".repeat(length);
         return faker.numerify(pattern);
@@ -31,12 +31,20 @@ public class DataHelper {
 
     public static String generateRandomSequenceWithLettersForNumbers(String locale, int length) {
         Faker faker = new Faker(new Locale(locale));
-        return faker.regexify("[A-Za-z0-9]{" + length + "}");
+        String sequence;
+        do {
+            sequence = faker.regexify("[A-Za-z0-9]{" + length + "}");
+        } while (!sequence.matches(".*[a-zA-Z].*"));  // Check if the sequence contains at least one letter
+        return sequence;
     }
 
     public static String generateRandomSequenceWithSpCharsForNumbers(int length) {
         Faker faker = new Faker();
-        return faker.regexify("[0-9!@#$%^&*()_+=<>?'\"-/|]{" + length + "}");
+        String sequence;
+        do {
+            sequence = faker.regexify("[0-9 !@#$%^&*()_+=<>?'\"-/|]{" + length + "}");
+        } while (!sequence.matches(".*[a-zA-Z].*"));  // Check if the sequence contains at least one letter
+        return sequence;
     }
 
     public static int generateMonthsToAdd(int min, int max) {
@@ -73,7 +81,7 @@ public class DataHelper {
 
     public static String generateRandomSequenceWithSpCharsForName(String locale, int length) {
         Faker faker = new Faker();
-        return faker.regexify("[A-Za-z0-9!@#$%^&*()_+=|<>?\"/|]{" + length + "}");
+        return faker.regexify("[A-Za-z0-9 !@#$%^&*()_+=|<>?\"/|]{" + length + "}");
     }
 
     public static String generateValidCVC() {
@@ -114,7 +122,7 @@ public class DataHelper {
 
     public static CardInfo getCardInfoInvalidCardNumber(int length) {
         CardInfo cardInfo = getApprovedCardInfo();
-        String number = generateRandomCardNumber(length);
+        String number = generateRandomCardNumberMonthYearOrCvc(length);
         return new CardInfo(cardInfo.status, number, cardInfo.month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
     }
 
@@ -130,17 +138,48 @@ public class DataHelper {
         return new CardInfo(cardInfo.status, number, cardInfo.month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
     }
 
-    public static CardInfo getCardInfoInvalidMonth(String month) {
+    public static CardInfo getCardInfoInvalidHardcodedMonth(String month) {
         CardInfo cardInfo = getApprovedCardInfo();
         return new CardInfo(cardInfo.status, cardInfo.number, month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
     }
 
-    public static CardInfo getCardInfoInvalidYear(String year) {
+    public static CardInfo getCardInfoInvalidMonth(int length) {
         CardInfo cardInfo = getApprovedCardInfo();
+        String month = generateRandomCardNumberMonthYearOrCvc(length);
+        return new CardInfo(cardInfo.status, cardInfo.number, month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoCardMonthWithLetters(String locale, int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String month = generateRandomSequenceWithLettersForNumbers(locale, length);
+        return new CardInfo(cardInfo.status, cardInfo.number, month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoCardMonthWithSpChars(int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String month = generateRandomSequenceWithSpCharsForNumbers(length);
+        return new CardInfo(cardInfo.status, cardInfo.number, month, cardInfo.year, cardInfo.holder, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoInvalidYear(int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String year = generateRandomCardNumberMonthYearOrCvc(length);
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, year, cardInfo.holder, cardInfo.cvc);
     }
 
-    public static CardInfo getCardInfoInvalidDate(int monthToAddMin, int monthToAddMax) {
+    public static CardInfo getCardInfoCardYearWithLetters(String locale, int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String year = generateRandomSequenceWithLettersForNumbers(locale, length);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, year, cardInfo.holder, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoCardYearWithSpChars(int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String year = generateRandomSequenceWithSpCharsForNumbers(length);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, year, cardInfo.holder, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoSpecifiedDate(int monthToAddMin, int monthToAddMax) {
         CardInfo cardInfo = getApprovedCardInfo();
         String date = generateDate(generateMonthsToAdd(monthToAddMin, monthToAddMax));
         String month = getMonth(date);
@@ -170,9 +209,21 @@ public class DataHelper {
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, cardInfo.holder, cvc);
     }
 
-    public static CardInfo getCardInfoInvalidCVC(String cvc) {
+    public static CardInfo getCardInfoInvalidCVC(int length) {
         CardInfo cardInfo = getApprovedCardInfo();
+        String cvc = generateRandomCardNumberMonthYearOrCvc(length);
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, cardInfo.holder, cvc);
     }
 
+    public static CardInfo getCardInfoCardCvcWithLetters(String locale, int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String cvc = generateRandomSequenceWithLettersForNumbers(locale, length);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, cardInfo.holder, cvc);
+    }
+
+    public static CardInfo getCardInfoCardCvcWithSpChars(int length) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String cvc = generateRandomSequenceWithSpCharsForNumbers(length);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, cardInfo.holder, cvc);
+    }
 }

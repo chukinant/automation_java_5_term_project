@@ -9,6 +9,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class BuyOnCreditPage {
     private final SelenideElement cardInfoFormHeader = $x("//*[contains(text(),'Кредит по данным карты')]");
+    private final SelenideElement cardInfoForm = $x("//form");
     private final SelenideElement cardNumber = $x("//*[contains(text(),'Номер карты')]//following-sibling::*//input");
     private final SelenideElement cardMonth = $x("//*[contains(text(),'Месяц')]//following-sibling::*//input");
     private final SelenideElement cardYear = $x("//*[contains(text(),'Год')]//following-sibling::*//input");
@@ -16,6 +17,7 @@ public class BuyOnCreditPage {
     private final SelenideElement cardCVC = $x("//*[contains(text(),'CVC/CVV')]//following-sibling::*//input");
     private final SelenideElement submitButton = $x("//span[contains(normalize-space(.), 'Продолжить')]//ancestor-or-self::button");
     private final SelenideElement transactionNotification = $("div.notification.notification_status_ok");
+    private final SelenideElement msgFieldIsRequired = $x(cardNumber+"/..//following-sibling::*[@class='input__sub']");
     private final SelenideElement msgInvalidCardNumber = $x(cardNumber+"/..//following-sibling::*[@class='input__sub']");
     private final SelenideElement msgInvalidMonth = $x(cardMonth+"/..//following-sibling::*[@class='input__sub']");
     private final SelenideElement msgInvalidYear = $x(cardYear+"/..//following-sibling::*[@class='input__sub']");
@@ -28,6 +30,7 @@ public class BuyOnCreditPage {
 
     public void headerShouldHaveText() {
         cardInfoFormHeader.shouldHave(Condition.text("Кредит по данным карты"));
+        cardInfoForm.shouldBe(Condition.visible);
     }
 
     public void fillForm(DataHelper.CardInfo cardInfo) {
@@ -38,8 +41,34 @@ public class BuyOnCreditPage {
         cardCVC.setValue(cardInfo.getCvc());
     }
 
+    public void fillFormWithoutOneField(DataHelper.CardInfo cardInfo) {
+        cardNumber.setValue(cardInfo.getNumber());
+        cardMonth.setValue(cardInfo.getMonth());
+        cardYear.setValue(cardInfo.getYear());
+        cardHolder.setValue(cardInfo.getHolder());
+        cardCVC.setValue(cardInfo.getCvc());
+    }
+
     public void submit() {
         submitButton.click();
+    }
+
+    public void fillFormWithOneFieldEmpty(DataHelper.CardInfo cardInfo, String fieldToLeaveEmpty) {
+        if (!"cardNumber".equals(fieldToLeaveEmpty)) {
+            cardNumber.setValue(cardInfo.getNumber());
+        }
+        if (!"cardMonth".equals(fieldToLeaveEmpty)) {
+            cardMonth.setValue(cardInfo.getMonth());
+        }
+        if (!"cardYear".equals(fieldToLeaveEmpty)) {
+            cardYear.setValue(cardInfo.getYear());
+        }
+        if (!"cardHolder".equals(fieldToLeaveEmpty)) {
+            cardHolder.setValue(cardInfo.getHolder());
+        }
+        if (!"cardCVC".equals(fieldToLeaveEmpty)) {
+            cardCVC.setValue(cardInfo.getCvc());
+        }
     }
 
     public void findMsgTransactionApproved() {
@@ -52,28 +81,48 @@ public class BuyOnCreditPage {
                 shouldHave(Condition.text("отклонена"));
     }
 
-    public void findMsgInvalidCardNumber() {
+    public void findMsgInvalidFormatCardNumber() {
         msgInvalidCardNumber.shouldBe(Condition.visible).
-                shouldHave(Condition.text("Ошибка"));
+                shouldHave(Condition.text("Неверный формат"));
     }
 
-    public void findMsgInvalidMonth() {
+    public void findMsgInvalidFormatMonth() {
         msgInvalidMonth.shouldBe(Condition.visible).
-                shouldHave(Condition.text("Ошибка"));
+                shouldHave(Condition.text("Неверный формат"));
     }
 
-    public void findMsgInvalidYear() {
+    public void findMsgCardExpirationInvalidDateMonth() {
+        msgInvalidMonth.shouldBe(Condition.visible).
+                shouldHave(Condition.text("Неверно указан срок действия карты"));
+    }
+
+    public void findMsgInvalidFormatYear() {
         msgInvalidYear.shouldBe(Condition.visible).
-                shouldHave(Condition.text("Ошибка"));
+                shouldHave(Condition.text("Неверный формат"));
+    }
+
+    public void findMsgCardExpiredDateYear() {
+        msgInvalidYear.shouldBe(Condition.visible).
+                shouldHave(Condition.text("Истёк срок действия карты"));
+    }
+
+    public void findMsgCardExpirationInvalidDateYear() {
+        msgInvalidMonth.shouldBe(Condition.visible).
+                shouldHave(Condition.text("Неверно указан срок действия карты"));
     }
 
     public void findMsgInvalidCardHolder() {
         msgInvalidCardHolder.shouldBe(Condition.visible).
-                shouldHave(Condition.text("Ошибка"));
+                shouldHave(Condition.text("Неверный формат"));
     }
 
-    public void findMsgInvalidCVC() {
+    public void findMsgInvalidFormatCVC() {
         msgInvalidCVC.shouldBe(Condition.visible).
-                shouldHave(Condition.text("Ошибка"));
+                shouldHave(Condition.text("Неверный формат"));
+    }
+
+    public void findMsgFieldIsRequired() {
+        msgFieldIsRequired.shouldBe(Condition.visible).
+                shouldHave(Condition.text("Поле обязательно для заполнения"));
     }
 }
