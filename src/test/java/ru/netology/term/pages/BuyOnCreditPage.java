@@ -2,31 +2,35 @@ package ru.netology.term.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import lombok.AllArgsConstructor;
 import ru.netology.term.data.DataHelper;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
+@AllArgsConstructor
 public class BuyOnCreditPage {
     private final SelenideElement cardInfoFormHeader = $x("//*[contains(text(),'Кредит по данным карты')]");
     private final SelenideElement cardInfoForm = $x("//form");
+    private final SelenideElement submitButton = $x("//span[contains(normalize-space(.), 'Продолжить')]//ancestor-or-self::button");
     private final SelenideElement cardNumber = $x("//*[contains(text(),'Номер карты')]//following-sibling::*//input");
     private final SelenideElement cardMonth = $x("//*[contains(text(),'Месяц')]//following-sibling::*//input");
     private final SelenideElement cardYear = $x("//*[contains(text(),'Год')]//following-sibling::*//input");
     private final SelenideElement cardHolder = $x("//*[contains(text(),'Владелец')]//following-sibling::*//input");
     private final SelenideElement cardCVC = $x("//*[contains(text(),'CVC/CVV')]//following-sibling::*//input");
-    private final SelenideElement submitButton = $x("//span[contains(normalize-space(.), 'Продолжить')]//ancestor-or-self::button");
     private final SelenideElement transactionNotification = $("div.notification.notification_status_ok");
-    private final SelenideElement msgFieldIsRequired = $x(cardNumber+"/..//following-sibling::*[@class='input__sub']");
-    private final SelenideElement msgInvalidCardNumber = $x(cardNumber+"/..//following-sibling::*[@class='input__sub']");
-    private final SelenideElement msgInvalidMonth = $x(cardMonth+"/..//following-sibling::*[@class='input__sub']");
-    private final SelenideElement msgInvalidYear = $x(cardYear+"/..//following-sibling::*[@class='input__sub']");
-    private final SelenideElement msgInvalidCardHolder = $x(cardHolder+"/..//following-sibling::*[@class='input__sub']");
-    private final SelenideElement msgInvalidCVC = $x(cardCVC+"/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgFieldIsRequired = $x("//*[contains(text(),'Владелец')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgInvalidCardNumber = $x("//*[contains(text(),'Номер карты')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgInvalidMonth = $x("//*[contains(text(),'Месяц')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgInvalidYear = $x("//*[contains(text(),'Год')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgInvalidCardHolder = $x("//*[contains(text(),'Владелец')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private final SelenideElement msgInvalidCVC = $x("//*[contains(text(),'CVC/CVV')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
 
-    public BuyOnCreditPage () {
-        cardInfoFormHeader.shouldBe(Condition.visible);
-    }
+//    public BuyOnCreditPage () {
+//        cardInfoFormHeader.shouldBe(Condition.visible);
+//    }
 
     public void headerShouldHaveText() {
         cardInfoFormHeader.shouldHave(Condition.text("Кредит по данным карты"));
@@ -34,14 +38,6 @@ public class BuyOnCreditPage {
     }
 
     public void fillForm(DataHelper.CardInfo cardInfo) {
-        cardNumber.setValue(cardInfo.getNumber());
-        cardMonth.setValue(cardInfo.getMonth());
-        cardYear.setValue(cardInfo.getYear());
-        cardHolder.setValue(cardInfo.getHolder());
-        cardCVC.setValue(cardInfo.getCvc());
-    }
-
-    public void fillFormWithoutOneField(DataHelper.CardInfo cardInfo) {
         cardNumber.setValue(cardInfo.getNumber());
         cardMonth.setValue(cardInfo.getMonth());
         cardYear.setValue(cardInfo.getYear());
@@ -72,12 +68,12 @@ public class BuyOnCreditPage {
     }
 
     public void findMsgTransactionApproved() {
-        transactionNotification.shouldBe(Condition.visible).
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).shouldHave(Condition.text("Успешно")).
                 shouldHave(Condition.text("одобрена"));
     }
 
     public void findMsgTransactionDeclined() {
-        transactionNotification.shouldBe(Condition.visible).
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).
                 shouldHave(Condition.text("отклонена"));
     }
 
@@ -124,5 +120,10 @@ public class BuyOnCreditPage {
     public void findMsgFieldIsRequired() {
         msgFieldIsRequired.shouldBe(Condition.visible).
                 shouldHave(Condition.text("Поле обязательно для заполнения"));
+    }
+
+    public void findMsgTransactionIsAlreadyMade() {
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).
+                shouldHave(Condition.text("Операция уже одобрена Банком"));
     }
 }

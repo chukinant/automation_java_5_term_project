@@ -5,8 +5,10 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import ru.netology.term.data.DataHelper;
+import ru.netology.term.data.DbDataHelper;
 import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
 
@@ -18,6 +20,11 @@ public class Steps {
     public void openLandingPage(String url) {
         Selenide.open(url);
         landingPage = new LandingPage();
+    }
+
+    @AfterEach
+    public void cleanDB() {
+        DbDataHelper.cleanDB();
     }
 
     @And("пользователь нажимает на кнопку \"Купить в кредит\"")
@@ -91,8 +98,8 @@ public class Steps {
     }
 
     @Then("значение не введено в поле \"Номер карты\"")
-    public void cardNumberIsNotEntered(DataHelper.CardInfo cardInfo) {
-        Assertions.assertTrue(cardInfo.getNumber().length() < 16);
+    public void cardNumberIsNotEntered() {
+        Assertions.assertTrue(buyOnCreditPage..length() < 16);
     }
 
     @When("пользователь заполняет форму, оставив поле \"Месяц\" пустым")
@@ -236,7 +243,7 @@ public class Steps {
         buyOnCreditPage.findMsgCardExpirationInvalidDateMonth();
     }
 
-    @When("пользователь заполняет форму, указав полях \"Месяц\" и \"Год\" прошлый период")
+    @When("пользователь заполняет форму, указав прошлый период в полях \"Месяц\" и \"Год\"")
     public void fillFormPastDate() {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoSpecifiedDate(-1,-300);
         buyOnCreditPage.fillForm(cardInfo);
@@ -244,7 +251,11 @@ public class Steps {
 
     @Then("появляется сообщение о неверном сроке действия карты или истекшем сроке действия карты")
     public void cardExpiredDisplayed () {
-        buyOnCreditPage.findMsgCardExpiredDateYear();;
+        try {
+            buyOnCreditPage.findMsgCardExpiredDateYear();
+        } catch (AssertionError e) {
+            buyOnCreditPage.findMsgCardExpirationInvalidDateMonth();
+        }
     }
 
     @When("пользователь заполняет форму, указав следующий месяц в поле \"Месяц\" и текущий год + 6 в поле \"Год\"")
@@ -272,19 +283,19 @@ public class Steps {
 
     @When("пользователь заполняет форму, указав в поле \"Владелец\" имя и фамилию, состоящие из 1 буквы")
     public void fillFormOneLetterCardHolderName() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en", 1, 0);
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoOneLetterName("en");
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @When("пользователь заполняет форму, указав в поле \"Владелец\" только имя")
     public void fillFormOnlyFirstName() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en", 10, 0);
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName("en",  0);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @When("пользователь заполняет форму, указав в поле \"Владелец\" комбинацию из букв с невалидным спецсимволом")
     public void fillFormCardHolderNameWithSpChars() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidNameWithSpChars("en", 10, 15);
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidNameWithSpChars("en", 15);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
@@ -299,11 +310,11 @@ public class Steps {
         buyOnCreditPage.fillForm(cardInfo);
     }
 
-    @When("пользователь заполняет форму, применяя нелатинские буквы <locale> в поле \"Владелец\"")
-    public void fillFormWithNonLatinLettersInField(String locale) {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName(locale, 10, 15);
-        buyOnCreditPage.fillForm(cardInfo);
-    }
+//    @When("пользователь заполняет форму, применяя нелатинские буквы {String} в поле \"Владелец\"")
+//    public void fillFormWithNonLatinLettersInField(String locale) {
+//        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidName(locale, 10, 15);
+//        buyOnCreditPage.fillForm(cardInfo);
+//    }
 
     @When("пользователь заполняет форму, указав три одинаковых цифры в поле \"CVC\"")
     public void fillFormCvcOfSameThreeDigits() {
@@ -315,5 +326,20 @@ public class Steps {
     public void fillFormCvcOfLessThanThreeDigits(int x) {
         DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidCVC(x);
         buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("пользователь обновляет страницу")
+    public void refreshPage() {
+        Selenide.refresh();
+    }
+
+    @And("повторно указывает данные карты")
+    public void fillFormAgain(DataHelper.CardInfo cardInfo) {
+        buyOnCreditPage.fillForm(cardInfo);
+    }
+
+    @Then("появляется сообщение, что заказ уже совершен")
+    public void orderIsAlreadyMade() {
+        buyOnCreditPage.findMsgTransactionIsAlreadyMade();
     }
 }

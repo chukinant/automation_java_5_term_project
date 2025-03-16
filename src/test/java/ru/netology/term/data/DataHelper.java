@@ -69,18 +69,18 @@ public class DataHelper {
         return faker.name().fullName();
     }
 
-    public static String generateRandomFirstName(String locale, int length) {
+    public static String generateRandomFirstName(String locale) {
         Faker faker = new Faker(new Locale(locale));
-        return faker.name().firstName().substring(0,length);
+        return faker.name().firstName();
     }
 
     public static String generateRandomSequenceWithDigitsForName(String locale, int length) {
-        Faker faker = new Faker();
+        Faker faker = new Faker(new Locale(locale));
         return faker.regexify("[A-Za-z0-9]{" + length + "}");
     }
 
     public static String generateRandomSequenceWithSpCharsForName(String locale, int length) {
-        Faker faker = new Faker();
+        Faker faker = new Faker(new Locale(locale));
         return faker.regexify("[A-Za-z0-9 !@#$%^&*()_+=|<>?\"/|]{" + length + "}");
     }
 
@@ -187,17 +187,23 @@ public class DataHelper {
         return new CardInfo(cardInfo.status, cardInfo.number, month, year, cardInfo.holder, cardInfo.cvc);
     }
 
-    public static CardInfo getCardInfoInvalidName(String locale, int lengthFirstName, int lengthSecondName) {
+    public static CardInfo getCardInfoInvalidName(String locale, int lengthSecondName) {
         CardInfo cardInfo = getApprovedCardInfo();
-        String firstName = generateRandomFirstName(locale, lengthFirstName);
+        String firstName = generateRandomFirstName(locale);
         String secondName = generateRandomSequenceWithDigitsForName(locale, lengthSecondName);
         String name = firstName + " " + secondName;
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, name, cardInfo.cvc);
     }
 
-    public static CardInfo getCardInfoInvalidNameWithSpChars(String locale, int lengthFirstName, int lengthSecondName) {
+    public static CardInfo getCardInfoOneLetterName(String locale) {
         CardInfo cardInfo = getApprovedCardInfo();
-        String firstName = generateRandomFirstName(locale, lengthFirstName);
+        String name = generateRandomFirstName(locale).substring(0,1);
+        return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, name, cardInfo.cvc);
+    }
+
+    public static CardInfo getCardInfoInvalidNameWithSpChars(String locale, int lengthSecondName) {
+        CardInfo cardInfo = getApprovedCardInfo();
+        String firstName = generateRandomFirstName(locale);
         String secondName = generateRandomSequenceWithSpCharsForName(locale, lengthSecondName);
         String name = firstName + " " + secondName;
         return new CardInfo(cardInfo.status, cardInfo.number, cardInfo.month, cardInfo.year, name, cardInfo.cvc);
