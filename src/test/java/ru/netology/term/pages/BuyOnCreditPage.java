@@ -2,7 +2,6 @@ package ru.netology.term.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import lombok.AllArgsConstructor;
 import ru.netology.term.data.DataHelper;
 
 import java.time.Duration;
@@ -10,7 +9,6 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
-@AllArgsConstructor
 public class BuyOnCreditPage {
     private final SelenideElement cardInfoFormHeader = $x("//*[contains(text(),'Кредит по данным карты')]");
     private final SelenideElement cardInfoForm = $x("//form");
@@ -27,10 +25,31 @@ public class BuyOnCreditPage {
     private final SelenideElement msgInvalidYear = $x("//*[contains(text(),'Год')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
     private final SelenideElement msgInvalidCardHolder = $x("//*[contains(text(),'Владелец')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
     private final SelenideElement msgInvalidCVC = $x("//*[contains(text(),'CVC/CVV')]//following-sibling::*//input/..//following-sibling::*[@class='input__sub']");
+    private DataHelper.CardInfo currentCardInfo;
 
-//    public BuyOnCreditPage () {
-//        cardInfoFormHeader.shouldBe(Condition.visible);
-//    }
+    public BuyOnCreditPage () {
+        cardInfoFormHeader.shouldBe(Condition.visible);
+    }
+
+    public String getValueInCardNumber () {
+        return cardNumber.getValue();
+    }
+
+    public String getValueInCardMonth () {
+        return cardMonth.getValue();
+    }
+
+    public String getValueInCardYear () {
+        return cardYear.getValue();
+    }
+
+    public String getValueInCardHolder () {
+        return cardHolder.getValue();
+    }
+
+    public String getValueInCardCVC() {
+        return cardCVC.getValue();
+    }
 
     public void headerShouldHaveText() {
         cardInfoFormHeader.shouldHave(Condition.text("Кредит по данным карты"));
@@ -38,11 +57,16 @@ public class BuyOnCreditPage {
     }
 
     public void fillForm(DataHelper.CardInfo cardInfo) {
+        currentCardInfo = cardInfo;
         cardNumber.setValue(cardInfo.getNumber());
         cardMonth.setValue(cardInfo.getMonth());
         cardYear.setValue(cardInfo.getYear());
         cardHolder.setValue(cardInfo.getHolder());
         cardCVC.setValue(cardInfo.getCvc());
+    }
+
+    public void fillFormAgain() {
+        fillForm(currentCardInfo);
     }
 
     public void submit() {
@@ -68,12 +92,12 @@ public class BuyOnCreditPage {
     }
 
     public void findMsgTransactionApproved() {
-        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).shouldHave(Condition.text("Успешно")).
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(15)).shouldHave(Condition.text("Успешно")).
                 shouldHave(Condition.text("одобрена"));
     }
 
     public void findMsgTransactionDeclined() {
-        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(15)).
                 shouldHave(Condition.text("отклонена"));
     }
 
@@ -123,7 +147,7 @@ public class BuyOnCreditPage {
     }
 
     public void findMsgTransactionIsAlreadyMade() {
-        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(10)).
+        transactionNotification.shouldBe(Condition.visible, Duration.ofSeconds(15)).
                 shouldHave(Condition.text("Операция уже одобрена Банком"));
     }
 }

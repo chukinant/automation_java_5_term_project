@@ -1,6 +1,7 @@
 package ru.netology.term.steps;
 
 import com.codeborne.selenide.Selenide;
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -22,7 +23,7 @@ public class Steps {
         landingPage = new LandingPage();
     }
 
-    @AfterEach
+    @After
     public void cleanDB() {
         DbDataHelper.cleanDB();
     }
@@ -99,7 +100,7 @@ public class Steps {
 
     @Then("значение не введено в поле \"Номер карты\"")
     public void cardNumberIsNotEntered() {
-        Assertions.assertTrue(buyOnCreditPage..length() < 16);
+        Assertions.assertTrue(buyOnCreditPage.getValueInCardNumber().length() < 16);
     }
 
     @When("пользователь заполняет форму, оставив поле \"Месяц\" пустым")
@@ -128,18 +129,18 @@ public class Steps {
 
     @When("пользователь заполняет форму, указав \"00\" поле \"Месяц\"")
     public void fillFormZeroMonth() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("00");;
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("00");
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @When("пользователь заполняет форму, указав \"13\" поле \"Месяц\"")
     public void fillFormThirteenthMonth() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("13");;
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidHardcodedMonth("13");
         buyOnCreditPage.fillForm(cardInfo);
     }
     @When("пользователь заполняет форму, указав одну цифру в поле \"Месяц\"")
     public void fillFormOneDigitMonth() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidMonth(1);;
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidMonth(1);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
@@ -157,7 +158,7 @@ public class Steps {
 
     @When("пользователь заполняет форму, указав одну цифру в поле \"Год\"")
     public void fillFormOneDigitYear() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(1);;
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(1);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
@@ -175,35 +176,35 @@ public class Steps {
 
     @When("пользователь заполняет форму, указав в поле \"CVC/CVV\" <x> цифр")
     public void fillFormOneOrTwoDigitCvc(int x) {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(x);;
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoInvalidYear(x);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @When("пользователь заполняет форму, указав в поле \"CVC\" комбинацию из цифр и спецсимволов")
     public void fillCvcWithSpChars() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithSpChars(2);
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardCvcWithSpChars(3);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @When("пользователь заполняет форму, указав в поле \"CVC\" комбинацию из цифр и букв")
     public void fillCardCvcWithLetters() {
-        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardYearWithLetters("en",2);
+        DataHelper.CardInfo cardInfo = DataHelper.getCardInfoCardCvcWithLetters("en",3);
         buyOnCreditPage.fillForm(cardInfo);
     }
 
     @Then("значение не введено в поле \"Месяц\"")
-    public void monthIsNotEntered(DataHelper.CardInfo cardInfo) {
-        Assertions.assertTrue(cardInfo.getMonth().length() < 2);
+    public void monthIsNotEntered() {
+        Assertions.assertTrue(buyOnCreditPage.getValueInCardMonth().length() < 2);
     }
 
     @Then("значение не введено в поле \"Год\"")
-    public void yearIsNotEntered(DataHelper.CardInfo cardInfo) {
-        Assertions.assertTrue(cardInfo.getYear().length() < 2);
+    public void yearIsNotEntered() {
+        Assertions.assertTrue(buyOnCreditPage.getValueInCardYear().length() < 2);
     }
 
     @Then("значение не введено в поле \"CVC\"")
-    public void cvcIsNotEntered(DataHelper.CardInfo cardInfo) {
-        Assertions.assertTrue(cardInfo.getCvc().length() < 3);
+    public void cvcIsNotEntered() {
+        Assertions.assertTrue(buyOnCreditPage.getValueInCardCVC().length() < 3);
     }
 
     @Then("появляется сообщение о неверном формате данных месяца")
@@ -216,10 +217,6 @@ public class Steps {
         buyOnCreditPage.findMsgInvalidFormatYear();
     }
 
-    @Then("появляется сообщение о неверном формате данных владельца")
-    public void invalidFormatHolderDisplayed () {
-        buyOnCreditPage.findMsgInvalidFormatCardHolder();
-    }
 
     @Then("появляется сообщение о неверном формате данных кода")
     public void invalidFormatCvcDisplayed () {
@@ -299,7 +296,7 @@ public class Steps {
         buyOnCreditPage.fillForm(cardInfo);
     }
 
-    @Then("появляется сообщение неверном формате данных владельца")
+    @Then("появляется сообщение о неверном формате данных владельца")
     public void cardInvalidCardHolderDisplayed () {
         buyOnCreditPage.findMsgInvalidFormatCardHolder();
     }
@@ -334,12 +331,22 @@ public class Steps {
     }
 
     @And("повторно указывает данные карты")
-    public void fillFormAgain(DataHelper.CardInfo cardInfo) {
-        buyOnCreditPage.fillForm(cardInfo);
+    public void fillFormAgain() {
+        buyOnCreditPage.fillFormAgain();
     }
 
     @Then("появляется сообщение, что заказ уже совершен")
     public void orderIsAlreadyMade() {
         buyOnCreditPage.findMsgTransactionIsAlreadyMade();
+    }
+
+    @And("в таблице credit_request_entity БД появляется запись со статусом APPROVED")
+    public void shouldAppearRecordWithStatusApproved() {
+        Assertions.assertEquals("APPROVED", DbDataHelper.getCreditStatus());
+    }
+
+    @And("в таблице order_entity БД появляется новая запись")
+    public void shouldAppearNewRecord() {
+        Assertions.assertEquals(1, DbDataHelper.countOrders());
     }
 }

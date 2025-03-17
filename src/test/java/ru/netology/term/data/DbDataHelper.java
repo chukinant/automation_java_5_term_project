@@ -11,17 +11,11 @@ import java.sql.SQLException;
 
 public class DbDataHelper {
     private static final QueryRunner queryRunner = new QueryRunner();
-    private static final String dbUrl = System.getProperty("postgres_url");
-    private static final String dbUser = System.getProperty("postgres_user");
-    private static final String dbPassword = System.getProperty("postgres_password");
+    private static final String dbUrl = "jdbc:postgresql://localhost:5432/shop_db";
+    private static final String dbUser = "tester";
+    private static final String dbPassword = "!Q2w3e4r";
 
     private DbDataHelper() {
-    }
-
-    @Value
-    public static class User {
-        String username;
-        String password;
     }
 
     public static Connection getConnection() throws SQLException {
@@ -29,7 +23,7 @@ public class DbDataHelper {
     }
 
     @SneakyThrows
-    public static String countOrders() {
+    public static long countOrders() {
         var sql = "SELECT COUNT(*) FROM order_entity;";
         try (var conn = getConnection()) {
             return queryRunner.query(conn, sql, new ScalarHandler<>());
@@ -47,9 +41,11 @@ public class DbDataHelper {
     @SneakyThrows
     public static void cleanDB() {
         try (var conn = getConnection()) {
-            queryRunner.execute(conn, "DELETE FROM credit_request_entity");
-            queryRunner.execute(conn, "DELETE FROM order_entity");
-            queryRunner.execute(conn, "DELETE FROM payment_entity");
+            conn.setAutoCommit(false);
+            queryRunner.update(conn, "DELETE FROM credit_request_entity");
+            queryRunner.update(conn, "DELETE FROM order_entity");
+            queryRunner.update(conn, "DELETE FROM payment_entity");
+            conn.commit();
         }
     }
 }
