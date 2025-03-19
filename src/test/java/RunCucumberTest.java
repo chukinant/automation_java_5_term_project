@@ -4,9 +4,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "summary"},
+        plugin = {"pretty", "com.epam.reportportal.cucumber.StepReporter"},
         features = {"src/test/resources/features"},
         glue = {"ru.netology.term.steps"})
-
 public class RunCucumberTest {
 }

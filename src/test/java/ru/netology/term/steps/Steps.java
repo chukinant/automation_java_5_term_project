@@ -1,11 +1,14 @@
 package ru.netology.term.steps;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import io.cucumber.java.After;
+import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+//import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.netology.term.data.DataHelper;
@@ -19,15 +22,25 @@ public class Steps {
     public static LandingPage landingPage;
     public static BuyOnCreditPage buyOnCreditPage;
 
-    @Given("открыта страница выбора способа оплаты тура {string}")
-    public void openLandingPage(String url) {
-        Selenide.open(url);
-        landingPage = new LandingPage();
-    }
+//    @BeforeAll
+//    static void setupAll() {
+//        SelenideLogger.addListener("allure", new AllureSelenide());
+//    }
+//
+//    @After
+//    public void tearDown() {
+//        SelenideLogger.removeListener("allure");
+//    }
 
     @After
     public void cleanDB() {
         DbDataHelper.cleanDB();
+    }
+
+    @Given("открыта страница выбора способа оплаты тура {string}")
+    public void openLandingPage(String url) {
+        Selenide.open(url);
+        landingPage = new LandingPage();
     }
 
     @And("пользователь нажимает на кнопку \"Купить в кредит\"")
