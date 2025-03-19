@@ -1,4 +1,6 @@
-## docker-compose -f docker-compose.yml -p term_project up -d --force-recreate --build
+## docker-compose -f docker-compose-postgres.yml -p term_project_db up -d --force-recreate --build
+## docker-compose -f docker-compose-reportportal.yml -p reportportal up -d --force-recreate
+
 -f or --file: Specify a custom Docker Compose YAML file.  
 -p or --project-name: Define a custom project name.  
 up: Create and start the services defined in the docker-compose.yml file.  

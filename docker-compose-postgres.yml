@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:14.16-alpine3.20
     ports:
-      - '5432:5432'  # Correct port mapping for PostgreSQL
+      - '5433:5432'  # Correct port mapping for PostgreSQL
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class DbDataHelper {
     private static final QueryRunner queryRunner = new QueryRunner();
-    private static final String dbUrl = "jdbc:postgresql://localhost:5432/shop_db";
+    private static final String dbUrl = "jdbc:postgresql://localhost:5433/shop_db";
     private static final String dbUser = "tester";
     private static final String dbPassword = "!Q2w3e4r";
 

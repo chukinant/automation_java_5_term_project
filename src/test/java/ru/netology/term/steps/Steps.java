@@ -6,13 +6,15 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.netology.term.data.DataHelper;
 import ru.netology.term.data.DbDataHelper;
 import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
+import ru.netology.term.util.ScreenShooterReportPortalExtension;
 
+@ExtendWith({ScreenShooterReportPortalExtension.class})
 public class Steps {
     public static LandingPage landingPage;
     public static BuyOnCreditPage buyOnCreditPage;

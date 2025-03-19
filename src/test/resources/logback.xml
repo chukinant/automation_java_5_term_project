@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Send debug messages to System.out -->
+    <appender name="ReportPortalAppender" class="com.epam.reportportal.logback.appender.ReportPortalAppender">
+        <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{5} - %thread - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+<!--    <appender name="RP" class="com.epam.reportportal.logback.appender.ReportPortalAppender">-->
+<!--        <encoder>-->
+<!--            &lt;!&ndash;Best practice: don't put time and logging level to the final message. Appender do this for you&ndash;&gt;-->
+<!--            <pattern>%d{HH:mm:ss.SSS} [%t] %-5level - %msg%n</pattern>-->
+<!--            <pattern>[%t] - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+    <!--'additivity' flag is important! Without it logback will double-log log messages-->
+    <logger name="binary_data_logger" level="DEBUG" additivity="false">
+        <appender-ref ref="ReportPortalAppender"/>
+    </logger>
+
+    <logger name="com.epam.reportportal.service" level="WARN"/>
+    <logger name="com.epam.reportportal.utils" level="WARN"/>
+
+    <!-- By default, the level of the root level is set to DEBUG -->
+    <root level="DEBUG">
+        <appender-ref ref="ReportPortalAppender"/>
+    </root>
+
+</configuration>
