@@ -9,6 +9,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 //import io.qameta.allure.selenide.AllureSelenide;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.netology.term.data.DataHelper;
@@ -17,20 +18,20 @@ import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
 import ru.netology.term.util.ScreenShooterReportPortalExtension;
 
-@ExtendWith({ScreenShooterReportPortalExtension.class})
+//@ExtendWith({ScreenShooterReportPortalExtension.class})
 public class Steps {
     public static LandingPage landingPage;
     public static BuyOnCreditPage buyOnCreditPage;
 
-//    @BeforeAll
-//    static void setupAll() {
-//        SelenideLogger.addListener("allure", new AllureSelenide());
-//    }
-//
-//    @After
-//    public void tearDown() {
-//        SelenideLogger.removeListener("allure");
-//    }
+    @BeforeAll
+    static void setupAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @After
+    public void tearDown() {
+        SelenideLogger.removeListener("allure");
+    }
 
     @After
     public void cleanDB() {

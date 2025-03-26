@@ -12,3 +12,5 @@ up: Create and start the services defined in the docker-compose.yml file.
 
 ## git commit --amend --no-edit
 ## git push --force (not in main branch)
+
+./gradlew clean test --stacktrace --info

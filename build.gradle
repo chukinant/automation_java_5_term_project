@@ -1,24 +1,27 @@
 plugins {
     id 'java'
     id("io.freefair.lombok") version "8.11"
-//    id('io.qameta.allure') version '2.11.2'
+    id('io.qameta.allure') version '2.11.2'
 }
 
 group = 'ru.netology'
 version = '1.0-SNAPSHOT'
 
-sourceCompatibility = 11
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 // кодировка файлов (если используется кириллица в файлах)
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
-//allure {
-//    version = '2.29.1'
-//    useJUnit5 {
-//        version = '2.29.1'
-//    }
-//}
+allure {
+    version = '2.20.1'
+    useJUnit5 {
+        version = '2.20.1'
+    }
+}
 
 repositories {
     mavenLocal()
@@ -26,32 +29,34 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
     testImplementation 'com.codeborne:selenide:6.17.2'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'org.postgresql:postgresql:42.6.0'
     testImplementation 'commons-dbutils:commons-dbutils:1.8.1'
-    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'io.cucumber:cucumber-java:7.1.0'
     testImplementation 'io.cucumber:cucumber-junit:7.1.0'
-    testImplementation 'com.epam.reportportal:logger-java-logback:5.2.3'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.1.0'
+//    testImplementation 'com.epam.reportportal:logger-java-logback:5.2.3'
 //    testImplementation 'com.epam.reportportal:logger-java-selenide:5.2.3'
-    testImplementation 'com.epam.reportportal:agent-java-cucumber:5.2.5'
-//    testImplementation 'io.qameta.allure:allure-selenide:2.29.1'
+//    testImplementation 'com.epam.reportportal:agent-java-cucumber:5.2.5'
+    testImplementation 'io.qameta.allure:allure-selenide:2.20.1'
 //    testImplementation 'ru.yandex.qatools.allure:allure-cucumber-jvm-adaptor:1.6.4'
-    implementation 'com.epam.reportportal:agent-java-junit5:5.1.6'
-    implementation 'ch.qos.logback:logback-classic:1.4.6'
-    implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
-    implementation 'com.epam.reportportal:logger-java-log4j:5.2.3'
+//    implementation 'com.epam.reportportal:agent-java-junit5:5.1.6'
+//    implementation 'ch.qos.logback:logback-classic:1.4.6'
+//    implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
+//    implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
+//    implementation 'com.epam.reportportal:logger-java-log4j:5.2.3'
 //    implementation 'org.slf4j:slf4j-api:2.0.7'
 //    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0'
 }
 
 test {
-    testLogging.showStandardStreams = true
+//    testLogging.showStandardStreams = true
     useJUnitPlatform()
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', true
+//    systemProperty 'junit.jupiter.extensions.autodetection.enabled', true
     // в тестах, вызывая `gradlew test -Dselenide.headless=true` будем передавать этот параметр в JVM (где его подтянет Selenide)
     // свойство selenide.headless используется в проектах на основе Selenide для передачи значения параметра в JVM
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
