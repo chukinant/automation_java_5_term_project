@@ -3,12 +3,12 @@ package ru.netology.term.steps;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-//import io.qameta.allure.selenide.AllureSelenide;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +16,11 @@ import ru.netology.term.data.DataHelper;
 import ru.netology.term.data.DbDataHelper;
 import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
-import ru.netology.term.util.ScreenShooterReportPortalExtension;
+import ru.netology.term.util.AllureScreenShooterExtension;
+//import ru.netology.term.util.ScreenShooterReportPortalExtension;
 
 //@ExtendWith({ScreenShooterReportPortalExtension.class})
+@ExtendWith({AllureScreenShooterExtension.class})
 public class Steps {
     public static LandingPage landingPage;
     public static BuyOnCreditPage buyOnCreditPage;
@@ -279,7 +281,7 @@ public class Steps {
 
     @Then("появляется сообщение о неверно указанном сроке действия карты")
     public void cardInvalidExpirationDateDisplayed () {
-        buyOnCreditPage.findMsgCardExpirationInvalidDateYear();
+        buyOnCreditPage.findMsgCardExpirationInvalidDate();
     }
 
     @When("пользователь заполняет форму, указав текущий месяц в поле \"Месяц\" и текущий год + 6 в поле \"Год\"")

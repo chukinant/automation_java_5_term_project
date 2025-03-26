@@ -126,8 +126,8 @@ public class BuyOnCreditPage {
                 shouldHave(Condition.text("Истёк срок действия карты"));
     }
 
-    public void findMsgCardExpirationInvalidDateYear() {
-        msgInvalidMonth.shouldBe(Condition.visible).
+    public void findMsgCardExpirationInvalidDate() {
+        msgInvalidYear.shouldBe(Condition.visible).
                 shouldHave(Condition.text("Неверно указан срок действия карты"));
     }
 

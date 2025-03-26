@@ -6,5 +6,8 @@
 2. Открыть проект в IntelliJ IDEA.
 3. В терминале запустить команду `docker-compose -f docker-compose-postgres.yml -p term_project_db up -d --force-recreate --build`, убедиться что контейнер запустился и работает.
 4. Запустить приложение командой `java -jar ./artifacts/aqa-shop.jar`
-5. Открыть браузер, в адресной строке указать http://localhost:8080/, должна отобразиться стартовая страница приложения
-6. 
+5. Когда приложение запустится, в терминале в логах появится запись типа "ru.netology.shop.ShopApplication: Started ShopApplication in 3.892 seconds (JVM running for 4.302)"
+6. Открыть другое окно терминала, запустить команду `./gradlew clean test --stacktrace --info`
+7. Для получения отчета Allure запустить `./gradlew allureReport`, далее открыть сгенерированный index.html из папки .\build\reports\allure-report\allureReport\
+8. После тестирования завершить работу приложения в его терминале при помощи команды `^C`
+9. Остановить и удалить контейнер БД, запущенный в Docker, при помощи `docker-compose -f docker-compose-postgres.yml -p term_project_db down`

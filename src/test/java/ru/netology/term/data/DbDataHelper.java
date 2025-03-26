@@ -40,12 +40,27 @@ public class DbDataHelper {
 
     @SneakyThrows
     public static void cleanDB() {
-        try (var conn = getConnection()) {
-            conn.setAutoCommit(false);
-            queryRunner.update(conn, "DELETE FROM credit_request_entity");
-            queryRunner.update(conn, "DELETE FROM order_entity");
-            queryRunner.update(conn, "DELETE FROM payment_entity");
-            conn.commit();
+        int attempts = 3;
+        while (attempts > 0) {
+            try {
+                var conn = getConnection();
+                conn.setAutoCommit(false);
+                queryRunner.update(conn, "DELETE FROM credit_request_entity");
+                queryRunner.update(conn, "DELETE FROM order_entity");
+                queryRunner.update(conn, "DELETE FROM payment_entity");
+                conn.commit();
+                return;
+            } catch (SQLException e) {
+                attempts--;
+                if (attempts == 0) {
+                    throw new RuntimeException("Database cleanup failed after multiple attempts.", e);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
     }
 }
