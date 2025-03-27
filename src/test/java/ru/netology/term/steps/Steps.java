@@ -3,7 +3,6 @@ package ru.netology.term.steps;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.cucumber.java.After;
-import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -17,9 +16,7 @@ import ru.netology.term.data.DbDataHelper;
 import ru.netology.term.pages.BuyOnCreditPage;
 import ru.netology.term.pages.LandingPage;
 import ru.netology.term.util.AllureScreenShooterExtension;
-//import ru.netology.term.util.ScreenShooterReportPortalExtension;
 
-//@ExtendWith({ScreenShooterReportPortalExtension.class})
 @ExtendWith({AllureScreenShooterExtension.class})
 public class Steps {
     public static LandingPage landingPage;
