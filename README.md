@@ -11,3 +11,7 @@
 7. Для получения отчета Allure запустить `./gradlew allureReport`, далее открыть сгенерированный index.html из папки .\build\reports\allure-report\allureReport\
 8. После тестирования завершить работу приложения в его терминале при помощи команды `^C`
 9. Остановить и удалить контейнер БД, запущенный в Docker, при помощи `docker-compose -f docker-compose-postgres.yml -p term_project_db down`
+
+Ссылки на документы:
+ - [План тестирования функционала покупки тура](https://github.com/chukinant/automation_java_5_term_project/blob/main/docs/Plan.md)
+ - [Отчет по проведенному тестированию](https://github.com/chukinant/automation_java_5_term_project/blob/main/docs/Report.md)

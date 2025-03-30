@@ -1,12 +1,7 @@
 Thumbs.db*
 .DS_Store
 HELP.md
-.gradle
 build/
-gradle/
-gradlew
-gradlew.bat
-settings.gradle
 
 ### STS ###
 .apt_generated
